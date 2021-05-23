@@ -48,8 +48,9 @@ def click(event):
 
     if (xCursor == redTileX or xCursor - 1 == redTileX) and yCursor == redTileY:
         redTileStatus = "SELECT"
-        for i in range(1):
-            print(redTileStatus, " for RedTile")
+        print(redTileStatus, " for RedTile")
+        for i in range(tilesAmount):
+            tileInfo[i].TileStatus = "UNSELECT"
     else:
         redTileStatus = "UNSELECT"
         print(redTileStatus, " for RedTile")
@@ -57,6 +58,7 @@ def click(event):
     for i in range(tilesAmount):
         tileInfo[i].TileStatus = "UNSELECT"
         if xCursor == TileCoordX[i] and yCursor == TileCoordY[i]:
+            redTileStatus = "UNSELECT"
             tileInfo[i].TileStatus = "SELECT"
             print(tileInfo[i].TileStatus, " for tile")
             print(TileCoordX[i], TileCoordY[i], "VERY IMPORTANT")
