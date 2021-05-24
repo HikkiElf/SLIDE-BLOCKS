@@ -51,8 +51,8 @@ class REDTILE:
         self.RedTileStatus = RedTileStatus
 
     # create window with image "you won"
-    def Winner(self):
-        def on_closing(self):
+    def winner(self):
+        def on_closing():
             self.winWinner.destroy()
 
         self.winWinner = tk.Toplevel(root) 
@@ -60,15 +60,15 @@ class REDTILE:
         self.winWinner.title('You Win')
         self.winWinner.geometry('400x400+600+300')
         
-        self.Mycanvas = tk.Canvas(winWinner,width=400,height=400)
+        self.Mycanvas = tk.Canvas(self.winWinner,width=400,height=400)
         self.Mycanvas.pack()
 
-        self.canvas_id = Mycanvas.create_text(180, 20, anchor="nw") 
-        self.Mycanvas.itemconfig(canvas_id, text="You Win!") 
+        self.canvas_id = self.Mycanvas.create_text(180, 20, anchor="nw") 
+        self.Mycanvas.itemconfig(self.canvas_id, text="You Win!") 
 
         self.pilImage = Image.open("unnamed1.jpeg")
-        self.image = ImageTk.PhotoImage(pilImage)
-        self.imagesprite = Mycanvas.create_image(200,200,image=image)
+        self.image = ImageTk.PhotoImage(self.pilImage)
+        self.imagesprite = self.Mycanvas.create_image(200,200,image=self.image)
         self.winWinner.mainloop()
     
     # draw red tile
@@ -107,10 +107,9 @@ def click(event):
         if xCursor == tileInfo[i].TileIndexX and yCursor == tileInfo[i].TileIndexY:
             RedTileInfo.set_status("UNSELECT")
             tileInfo[i].set_status("SELECT")
-            # print(tileInfo[i].TileStatus, " for tile")
-            # print(TileCoordX[i], TileCoordY[i], "VERY IMPORTANT")
-    # for i in range (TilesAmount):
-    #     print(tileInfo[i].TileStatus," for list of tiles")
+            print(tileInfo[i].TileStatus, " for Tile " + str(i))
+    for i in range(TilesAmount):
+        print(tileInfo[i].TileStatus, " for Tile " + str(i))
         
     
 
@@ -139,7 +138,7 @@ def draw_board():
     tile = [0] * TilesAmount
     redTileRect = RedTileInfo.draw()
     RedTileInfo.description()
-    print(RedTileInfo.RedTileIndexX, RedTileInfo.RedTileIndexY, redTileRect , " Индексы красного блока")
+    print(RedTileInfo.RedTileIndexX, RedTileInfo.RedTileIndexY, " Индексы красного блока")
     for i in range(TilesAmount):
         tileInfo[i] = Tile()
         tileInfo[i].set_coords(i * squareSize, i * squareSize)
@@ -158,37 +157,31 @@ def draw_board():
 
 
 # moving tiles when 1 of them selected
-# def move_tile(event):
-#     global redTileX, redTileStatus
-#     if redTileStatus == "SELECT":
-#         if event.keysym == 'Right' and (not redTileX == 4):
-#             for i in range(TilesAmount):
-#                 if (redTileX == TileCoordX[i] or redTileX + 1 == TileCoordX[i]) and redTileY == TileCoordY[i]:
-#                     canvas.move(redTile, -(squareSize * 2), 0)
-#                     redTileX -= 2
-#                     print(TileCoordX[i], redTileX, "дада")
-#                     break
-#                 else:
-#                     print(TileCoordX[i], redTileX, "еще немного важной инфы")
-#                     canvas.move(redTile, squareSize, 0)
-#                     redTileX = redTileX + 1
-#                     # print(redTileX, "position x + 1")
-#                     canvas.update()
-#                     if redTileX == 4:
-#                         Winner()
-#         if event.keysym == 'Left' and (not redTileX == 0):
-#             canvas.move(redTile, -squareSize, 0)
-#             redTileX = redTileX - 1
-#             # print(redTileX, "position x - 1")
-#             canvas.update()
-#     for i in range (TilesAmount):
-#         if tileInfo[i].TileStatus == "SELECT":
-#             if event.keysym == 'Right':
-#                 canvas.move(tile[i], squareSize, 0)
-#                 TileCoordX[i] += 1
-#             if event.keysym == 'Left':
-#                 canvas.move(tile[i], -squareSize, 0)
-#                 TileCoordX[i] -= 1
+def move_tile(event):
+    if RedTileInfo.RedTileStatus == "SELECT":
+        if event.keysym == 'Right' and (not RedTileInfo.RedTileIndexX == 4):
+            for i in range(TilesAmount):
+                if RedTileInfo.RedTileIndexY == tileInfo[i].TileIndexY:
+                    if not (RedTileInfo.RedTileIndexX == tileInfo[i].TileIndexX or RedTileInfo.RedTileIndexX + 2 == tileInfo[i].TileIndexX):
+                        canvas.move(redTileRect, squareSize, 0)
+                        RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX + 1
+                        canvas.update()
+                        if RedTileInfo.RedTileIndexX == 400:
+                            RedTileInfo.winner()
+                    else:
+                        break
+        if event.keysym == 'Left' and (not RedTileInfo.RedTileIndexX == 0):
+            canvas.move(redTileRect, -squareSize, 0)
+            RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX - 1
+            # print(redTileX, "position x - 1")
+    for i in range (TilesAmount):
+        if tileInfo[i].TileStatus == "SELECT":
+            if event.keysym == 'Right':
+                canvas.move(tile[i], squareSize, 0)
+                tileInfo[i].TileIndexX += 1
+            if event.keysym == 'Left':
+                canvas.move(tile[i], -squareSize, 0)
+                tileInfo[i].TileIndexX -= 1
 
 
 # Game settings
@@ -202,8 +195,8 @@ canvas = tk.Canvas(root, width=boardSize * squareSize, height=boardSize * square
 canvas.focus_set()
 canvas.pack()
 canvas.bind('<Button-1>', click)
-# canvas.bind('<Right>', move_tile)
-# canvas.bind('<Left>', move_tile)
+canvas.bind('<Right>', move_tile)
+canvas.bind('<Left>', move_tile)
 # canvas.bind('<Up>', Print)
 
 board = list(range(1, squares + 1))
