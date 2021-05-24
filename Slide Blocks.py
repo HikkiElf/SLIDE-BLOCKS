@@ -73,13 +73,12 @@ class REDTILE:
     
     # draw red tile
     def draw(self):
-
-        self.redTile = canvas.create_rectangle(self.RedTileCoordX, self.RedTileCoordY,
+        redTileRect = canvas.create_rectangle(self.RedTileCoordX, self.RedTileCoordY,
                                 self.RedTileCoordX + squareSize * 2,
                                 self.RedTileCoordY + squareSize,
                                 fill="#D42421",
                                 outline="#8b5546")
-        return self.redTile
+        return redTileRect
 
     # redtile coordinates
     def description(self):
@@ -88,33 +87,26 @@ class REDTILE:
 
 # register block selection for next moving
 def click(event):
-    global redTileStatus, tile
-    redTileStatus = "UNSELECT" # "SELECT"
 
     xCursor, yCursor = event.x, event.y
 
     xCursor = xCursor // squareSize
     yCursor = yCursor // squareSize
 
-    print(xCursor, yCursor, "xCursor and yCursor")
-    print(redTileX, redTileY, " x and y for RedTile")
-    for i in range(TilesAmount):
-        print(TileCoordX[i], TileCoordY[i], "x" + str(i) + " and y" + str(i) + " for tile")
-
-    if (xCursor == redTileX or xCursor - 1 == redTileX) and yCursor == redTileY:
-        redTileStatus = "SELECT"
-        # print(redTileStatus, " for RedTile")
+    if (xCursor == RedTileInfo.RedTileIndexX or xCursor - 1 == RedTileInfo.RedTileIndexX) and yCursor == RedTileInfo.RedTileIndexY:
+        RedTileInfo.set_status("SELECT")
+        print(RedTileInfo.RedTileStatus, " for RedTile")
         for i in range(TilesAmount):
-            tileInfo[i].TileStatus = "UNSELECT"
+            tileInfo[i].set_status("UNSELECT")
     else:
-        redTileStatus = "UNSELECT"
-        # print(redTileStatus, " for RedTile")
+        RedTileInfo.set_status("UNSELECT")
+        print(RedTileInfo.RedTileStatus, " for RedTile")
 
     for i in range(TilesAmount):
-        tileInfo[i].TileStatus = "UNSELECT"
-        if xCursor == TileCoordX[i] and yCursor == TileCoordY[i]:
-            redTileStatus = "UNSELECT"
-            tileInfo[i].TileStatus = "SELECT"
+        tileInfo[i].set_status("UNSELECT")
+        if xCursor == tileInfo[i].TileIndexX and yCursor == tileInfo[i].TileIndexY:
+            RedTileInfo.set_status("UNSELECT")
+            tileInfo[i].set_status("SELECT")
             # print(tileInfo[i].TileStatus, " for tile")
             # print(TileCoordX[i], TileCoordY[i], "VERY IMPORTANT")
     # for i in range (TilesAmount):
@@ -124,11 +116,10 @@ def click(event):
 
 # draw game board
 def draw_board():
-    global emptySquares
+    global emptySquares, RedTileInfo, tile, redTileRect, tileInfo
     emptySquares = [0] * boardSize
     for i in range(boardSize):
         emptySquares[i] = [0] * boardSize
-    canvas.delete("all")
     for i in range(boardSize):
         for j in range(boardSize):
             if i == 2 and j == 5:
@@ -144,10 +135,11 @@ def draw_board():
                                         i * squareSize + squareSize,
                                         fill="#55342b",
                                         outline="#8b5546")
-    redTile = REDTILE(0, 200)
+    RedTileInfo = REDTILE(0, 200)
     tile = [0] * TilesAmount
-    redTile.draw()
-    redTile.description()
+    redTileRect = RedTileInfo.draw()
+    RedTileInfo.description()
+    print(RedTileInfo.RedTileIndexX, RedTileInfo.RedTileIndexY, redTileRect , " Индексы красного блока")
     for i in range(TilesAmount):
         tileInfo[i] = Tile()
         tileInfo[i].set_coords(i * squareSize, i * squareSize)
@@ -160,7 +152,6 @@ def draw_board():
                                             tileInfo[i].TileIndexY * squareSize + squareSize,
                                             fill="#FFFF99",
                                             outline="#8b5546")
-        print(tile[i], " Вот индекс сраной плитки")
 
 
 
@@ -210,7 +201,7 @@ squares = boardSize ** 2
 canvas = tk.Canvas(root, width=boardSize * squareSize, height=boardSize * squareSize, bg = "#808080")
 canvas.focus_set()
 canvas.pack()
-# canvas.bind('<Button-1>', click)
+canvas.bind('<Button-1>', click)
 # canvas.bind('<Right>', move_tile)
 # canvas.bind('<Left>', move_tile)
 # canvas.bind('<Up>', Print)
