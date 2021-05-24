@@ -165,23 +165,36 @@ def move_tile(event):
                     if not (RedTileInfo.RedTileIndexX == tileInfo[i].TileIndexX or RedTileInfo.RedTileIndexX + 2 == tileInfo[i].TileIndexX):
                         canvas.move(redTileRect, squareSize, 0)
                         RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX + 1
-                        canvas.update()
                         if RedTileInfo.RedTileIndexX == 400:
                             RedTileInfo.winner()
                     else:
                         break
         if event.keysym == 'Left' and (not RedTileInfo.RedTileIndexX == 0):
-            canvas.move(redTileRect, -squareSize, 0)
-            RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX - 1
-            # print(redTileX, "position x - 1")
+            for i in range(TilesAmount):
+                if RedTileInfo.RedTileIndexY == tileInfo[i].TileIndexY:
+                    if not (RedTileInfo.RedTileIndexX - 1 == tileInfo[i].TileIndexX):
+                        canvas.move(redTileRect, -squareSize, 0)
+                        RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX - 1
+                    else:
+                        break
     for i in range (TilesAmount):
         if tileInfo[i].TileStatus == "SELECT":
-            if event.keysym == 'Right':
-                canvas.move(tile[i], squareSize, 0)
-                tileInfo[i].TileIndexX += 1
-            if event.keysym == 'Left':
-                canvas.move(tile[i], -squareSize, 0)
-                tileInfo[i].TileIndexX -= 1
+            if event.keysym == 'Right' and (not tileInfo[i].TileIndexX == 5):
+                if not RedTileInfo.RedTileIndexY == tileInfo[i].TileIndexY:
+                    canvas.move(tile[i], squareSize, 0)
+                    tileInfo[i].TileIndexX += 1
+                else:
+                    if not (RedTileInfo.RedTileIndexX == tileInfo[i].TileIndexX or RedTileInfo.RedTileIndexX + 1 == tileInfo[i].TileIndexX):
+                        canvas.move(tile[i], squareSize, 0)
+                        tileInfo[i].TileIndexX += 1
+            if event.keysym == 'Left' and (not tileInfo[i].TileIndexX == 0):
+                if not RedTileInfo.RedTileIndexY == tileInfo[i].TileIndexY:
+                    canvas.move(tile[i], -squareSize, 0)
+                    tileInfo[i].TileIndexX -= 1
+                else:
+                    if not (RedTileInfo.RedTileIndexX + 2 == tileInfo[i].TileIndexX):
+                        canvas.move(tile[i], -squareSize, 0)
+                        tileInfo[i].TileIndexX -= 1
 
 
 # Game settings
