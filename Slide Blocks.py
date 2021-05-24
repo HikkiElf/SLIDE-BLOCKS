@@ -21,6 +21,10 @@ class Tile:
 # draw red tile
 def red_tile():
     global redTile
+
+    redTileX1 = 0
+    redTileY1 = 0
+
     for i in range(len(emptySquares)):
         for j in range(len(emptySquares[i])):
             if emptySquares[i][j] == 13:
@@ -48,25 +52,25 @@ def click(event):
 
     if (xCursor == redTileX or xCursor - 1 == redTileX) and yCursor == redTileY:
         redTileStatus = "SELECT"
-        print(redTileStatus, " for RedTile")
+        # print(redTileStatus, " for RedTile")
         for i in range(tilesAmount):
             tileInfo[i].TileStatus = "UNSELECT"
     else:
         redTileStatus = "UNSELECT"
-        print(redTileStatus, " for RedTile")
+        # print(redTileStatus, " for RedTile")
 
     for i in range(tilesAmount):
         tileInfo[i].TileStatus = "UNSELECT"
         if xCursor == TileCoordX[i] and yCursor == TileCoordY[i]:
             redTileStatus = "UNSELECT"
             tileInfo[i].TileStatus = "SELECT"
-            print(tileInfo[i].TileStatus, " for tile")
-            print(TileCoordX[i], TileCoordY[i], "VERY IMPORTANT")
-    for i in range (tilesAmount):
-        print(tileInfo[i].TileStatus," for list of tiles")
+            # print(tileInfo[i].TileStatus, " for tile")
+            # print(TileCoordX[i], TileCoordY[i], "VERY IMPORTANT")
+    # for i in range (tilesAmount):
+    #     print(tileInfo[i].TileStatus," for list of tiles")
         
     
-    
+
 # draw game board
 def draw_board():
     global emptySquares
@@ -104,7 +108,7 @@ def draw_tile():
                                         TileCoordY[i] * squareSize + squareSize,
                                         fill="#FFFF99",
                                         outline="#8b5546")
-        print(tile[i], "= плитка")
+        # print(tile[i], "= плитка")
 
 
 # moving tiles when 1 of them selected
@@ -113,21 +117,23 @@ def move_tile(event):
     if redTileStatus == "SELECT":
         if event.keysym == 'Right' and (not redTileX == 4):
             for i in range(tilesAmount):
-                if redTileX == TileCoordX[i]:
+                if (redTileX == TileCoordX[i] or redTileX + 1 == TileCoordX[i]) and redTileY == TileCoordY[i]:
+                    canvas.move(redTile, -(squareSize * 2), 0)
+                    redTileX -= 2
                     print(TileCoordX[i], redTileX, "дада")
                     break
                 else:
                     print(TileCoordX[i], redTileX, "еще немного важной инфы")
                     canvas.move(redTile, squareSize, 0)
                     redTileX = redTileX + 1
-                    print(redTileX, "position x + 1")
+                    # print(redTileX, "position x + 1")
                     canvas.update()
                     if redTileX == 4:
                         Winner()
         if event.keysym == 'Left' and (not redTileX == 0):
             canvas.move(redTile, -squareSize, 0)
             redTileX = redTileX - 1
-            print(redTileX, "position x - 1")
+            # print(redTileX, "position x - 1")
             canvas.update()
     for i in range (tilesAmount):
         if tileInfo[i].TileStatus == "SELECT":
@@ -180,7 +186,7 @@ canvas.bind('<Left>', move_tile)
 # canvas.bind('<Up>', Print)
 
 board = list(range(1, squares + 1))
-print(board)
+# print(board)
 tileInfo = [0] * 10
 
 # Settings for module that i'm gonna create from menu on pygame
@@ -194,7 +200,7 @@ for i in range(tilesAmount):
     TileCoordX[i] = i * squareSize
     TileCoordY[i] = i * squareSize
     tileInfo[i] = Tile(size[i], "horizontal", TileCoordX[i], TileCoordY[i], "UNSELECT")
-    tileInfo[i].description()
+    # tileInfo[i].description()
 
 for i in range (1):
     draw_board()
