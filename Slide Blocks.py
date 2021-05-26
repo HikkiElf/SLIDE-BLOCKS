@@ -158,32 +158,42 @@ def draw_board():
 
 # moving tiles when 1 of them selected
 def move_tile(event):
+    global localRight
     if RedTileInfo.RedTileStatus == "SELECT":
+        for i in range(TilesAmount):
 
-        if event.keysym == 'Right' and (not RedTileInfo.RedTileIndexX == 4):
-            for i in range(TilesAmount):
-                if RedTileInfo.RedTileIndexY == tileInfo[i].TileIndexY:
-                    if not (RedTileInfo.RedTileIndexX == tileInfo[i].TileIndexX or RedTileInfo.RedTileIndexX + 2 == tileInfo[i].TileIndexX):
-                        canvas.move(redTileRect, squareSize, 0)
-                        RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX + 1
-                        if RedTileInfo.RedTileIndexX == 400:
-                            RedTileInfo.winner()
+            if event.keysym == 'Right' and (not RedTileInfo.RedTileIndexX == 4):
+                    if RedTileInfo.RedTileIndexY == tileInfo[i].TileIndexY:
+                        if not (RedTileInfo.RedTileIndexX == tileInfo[i].TileIndexX or RedTileInfo.RedTileIndexX + 2 == tileInfo[i].TileIndexX):
+                            canvas.move(redTileRect, squareSize, 0)
+                            RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX + 1
+                            if RedTileInfo.RedTileIndexX == 4:
+                                RedTileInfo.winner()
+                        else:
+                            break
                     else:
-                        break
-                # if not RedTileInfo.RedTileIndexY == tileInfo[i].TileIndexY:
-                #     canvas.move(redTileRect, squareSize, 0)
-                #     RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX + 1
-                #     if RedTileInfo.RedTileIndexX == 400:
-                #         RedTileInfo.winner()
+                        localRight += 1
+                        if localRight == TilesAmount:
+                            localRight = 0
+                            canvas.move(redTileRect, squareSize, 0)
+                            RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX + 1
+                            if RedTileInfo.RedTileIndexX == 4:
+                                RedTileInfo.winner()
 
-        if event.keysym == 'Left' and (not RedTileInfo.RedTileIndexX == 0):
-            for i in range(TilesAmount):
-                if RedTileInfo.RedTileIndexY == tileInfo[i].TileIndexY:
-                    if not (RedTileInfo.RedTileIndexX - 1 == tileInfo[i].TileIndexX):
-                        canvas.move(redTileRect, -squareSize, 0)
-                        RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX - 1
+
+            elif event.keysym == 'Left' and (not RedTileInfo.RedTileIndexX == 0):
+                    if RedTileInfo.RedTileIndexY == tileInfo[i].TileIndexY:
+                        if not (RedTileInfo.RedTileIndexX - 1 == tileInfo[i].TileIndexX):
+                            canvas.move(redTileRect, -squareSize, 0)
+                            RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX - 1
+                        else:
+                            break
                     else:
-                        break
+                        localRight += 1
+                        if localRight == TilesAmount:
+                            localRight = 0
+                            canvas.move(redTileRect, -squareSize, 0)
+                            RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX - 1
 
 
     for i in range (TilesAmount):
@@ -194,7 +204,7 @@ def move_tile(event):
                     canvas.move(tile[i], squareSize, 0)
                     tileInfo[i].TileIndexX += 1
                 else:
-                    if not (RedTileInfo.RedTileIndexX == tileInfo[i].TileIndexX or RedTileInfo.RedTileIndexX + 1 == tileInfo[i].TileIndexX):
+                    if not (RedTileInfo.RedTileIndexX == tileInfo[i].TileIndexX or RedTileInfo.RedTileIndexX + 1 == tileInfo[i].TileIndexX or RedTileInfo.RedTileIndexX - 1 == tileInfo[i].TileIndexX):
                         canvas.move(tile[i], squareSize, 0)
                         tileInfo[i].TileIndexX += 1
 
@@ -208,7 +218,7 @@ def move_tile(event):
                         tileInfo[i].TileIndexX -= 1
 
             if event.keysym == 'Up' and (not tileInfo[i].TileIndexY == 0):
-                if not RedTileInfo.RedTileIndexX == tileInfo[i].TileIndexX:
+                if not (RedTileInfo.RedTileIndexX == tileInfo[i].TileIndexX or RedTileInfo.RedTileIndexX + 1 == tileInfo[i].TileIndexX):
                     canvas.move(tile[i], 0, -squareSize)
                     tileInfo[i].TileIndexY -= 1
                 else:
@@ -217,7 +227,7 @@ def move_tile(event):
                         tileInfo[i].TileIndexY -= 1
 
             if event.keysym == 'Down' and (not tileInfo[i].TileIndexY == 5):
-                if not RedTileInfo.RedTileIndexX == tileInfo[i].TileIndexX:
+                if not (RedTileInfo.RedTileIndexX == tileInfo[i].TileIndexX or RedTileInfo.RedTileIndexX + 1 == tileInfo[i].TileIndexX):
                     canvas.move(tile[i], 0, squareSize)
                     tileInfo[i].TileIndexY += 1
                 else:
@@ -233,6 +243,8 @@ root.title("Slide Blocks") # window name
 boardSize = 6
 squareSize = 100
 squares = boardSize ** 2
+
+localRight = 0
 
 canvas = tk.Canvas(root, width=boardSize * squareSize, height=boardSize * squareSize, bg = "#808080")
 canvas.focus_set()
