@@ -159,6 +159,7 @@ def draw_board():
 # moving tiles when 1 of them selected
 def move_tile(event):
     if RedTileInfo.RedTileStatus == "SELECT":
+
         if event.keysym == 'Right' and (not RedTileInfo.RedTileIndexX == 4):
             for i in range(TilesAmount):
                 if RedTileInfo.RedTileIndexY == tileInfo[i].TileIndexY:
@@ -169,6 +170,12 @@ def move_tile(event):
                             RedTileInfo.winner()
                     else:
                         break
+                # if not RedTileInfo.RedTileIndexY == tileInfo[i].TileIndexY:
+                #     canvas.move(redTileRect, squareSize, 0)
+                #     RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX + 1
+                #     if RedTileInfo.RedTileIndexX == 400:
+                #         RedTileInfo.winner()
+
         if event.keysym == 'Left' and (not RedTileInfo.RedTileIndexX == 0):
             for i in range(TilesAmount):
                 if RedTileInfo.RedTileIndexY == tileInfo[i].TileIndexY:
@@ -177,8 +184,11 @@ def move_tile(event):
                         RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX - 1
                     else:
                         break
+
+
     for i in range (TilesAmount):
         if tileInfo[i].TileStatus == "SELECT":
+
             if event.keysym == 'Right' and (not tileInfo[i].TileIndexX == 5):
                 if not RedTileInfo.RedTileIndexY == tileInfo[i].TileIndexY:
                     canvas.move(tile[i], squareSize, 0)
@@ -187,6 +197,7 @@ def move_tile(event):
                     if not (RedTileInfo.RedTileIndexX == tileInfo[i].TileIndexX or RedTileInfo.RedTileIndexX + 1 == tileInfo[i].TileIndexX):
                         canvas.move(tile[i], squareSize, 0)
                         tileInfo[i].TileIndexX += 1
+
             if event.keysym == 'Left' and (not tileInfo[i].TileIndexX == 0):
                 if not RedTileInfo.RedTileIndexY == tileInfo[i].TileIndexY:
                     canvas.move(tile[i], -squareSize, 0)
@@ -195,6 +206,25 @@ def move_tile(event):
                     if not (RedTileInfo.RedTileIndexX + 2 == tileInfo[i].TileIndexX):
                         canvas.move(tile[i], -squareSize, 0)
                         tileInfo[i].TileIndexX -= 1
+
+            if event.keysym == 'Up' and (not tileInfo[i].TileIndexY == 0):
+                if not RedTileInfo.RedTileIndexX == tileInfo[i].TileIndexX:
+                    canvas.move(tile[i], 0, -squareSize)
+                    tileInfo[i].TileIndexY -= 1
+                else:
+                    if not (RedTileInfo.RedTileIndexY + 1 == tileInfo[i].TileIndexY):
+                        canvas.move(tile[i], 0, -squareSize)
+                        tileInfo[i].TileIndexY -= 1
+
+            if event.keysym == 'Down' and (not tileInfo[i].TileIndexY == 5):
+                if not RedTileInfo.RedTileIndexX == tileInfo[i].TileIndexX:
+                    canvas.move(tile[i], 0, squareSize)
+                    tileInfo[i].TileIndexY += 1
+                else:
+                    if not (RedTileInfo.RedTileIndexY - 1 == tileInfo[i].TileIndexY):
+                        canvas.move(tile[i], 0, squareSize)
+                        tileInfo[i].TileIndexY += 1
+            
 
 
 # Game settings
@@ -210,7 +240,8 @@ canvas.pack()
 canvas.bind('<Button-1>', click)
 canvas.bind('<Right>', move_tile)
 canvas.bind('<Left>', move_tile)
-# canvas.bind('<Up>', Print)
+canvas.bind('<Up>', move_tile)
+canvas.bind('<Down>', move_tile)
 
 board = list(range(1, squares + 1))
 # print(board)
