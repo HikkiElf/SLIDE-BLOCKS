@@ -129,7 +129,7 @@ def filling(boardSize, board, TilesAmount):
 
     for i in range(TilesAmount):
         for j in range(TilesAmount):
-            if i == tileInfo[i].TileIndexX and j == tileInfo[i].TileIndexY: 
+            if i == tileInfo[i].TileIndexX and j == tileInfo[i].TileIndexY:
                 board[tileInfo[i].TileIndexX][tileInfo[i].TileIndexY] = "Tile"
     for i in range(boardSize):
         for j in range(boardSize):
@@ -185,8 +185,8 @@ def draw_board():
 def move_tile(event):
     global localRight
     if RedTileInfo.RedTileStatus == "SELECT":
-        for i in range(TilesAmount):
-            for j in range(TilesAmount):
+        for i in range(boardSize):
+            for j in range(boardSize):
                 if event.keysym == 'Right' and (not RedTileInfo.RedTileIndexX == 4):
                     if board[i][j] == "red" and board[i][j + 1] == "red":
                         if board[i][j + 2] != "Tile":
@@ -205,29 +205,23 @@ def move_tile(event):
                                 RedTileInfo.winner()
                         else:
                             break
-                    # else:
-                    #     localRight += 1
-                    #     if localRight == TilesAmount:
-                    #         localRight = 0
-                    #         canvas.move(redTileRect, squareSize, 0)
-                    #         RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX + 1
-                    #         if RedTileInfo.RedTileIndexX == 4:
-                    #             RedTileInfo.winner()
-
 
                 elif event.keysym == 'Left' and (not RedTileInfo.RedTileIndexX == 0):
-                        if RedTileInfo.RedTileIndexY == tileInfo[i].TileIndexY:
-                            if not (RedTileInfo.RedTileIndexX - 1 == tileInfo[i].TileIndexX):
+                        if board[i][j] == "red" and board[i][j + 1] == "red":
+                            if board[i][j - 1] != "Tile":
+                                buff = board[i][j - 1]
+                                board[i][j - 1] = board[i][j]
+                                board[i][j] = board[i][j + 1]
+                                board[i][j + 1] = buff
+                                for i in range(boardSize):
+                                    for j in range(boardSize):
+                                        print(board[i][j], end=' ')
+                                    print()
+                                print()
                                 canvas.move(redTileRect, -squareSize, 0)
                                 RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX - 1
                             else:
                                 break
-                    # else:
-                    #     localRight += 1
-                    #     if localRight == TilesAmount:
-                    #         localRight = 0
-                    #         canvas.move(redTileRect, -squareSize, 0)
-                    #         RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX - 1
 
 
     for i in range (TilesAmount):
