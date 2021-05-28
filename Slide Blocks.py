@@ -189,22 +189,22 @@ def move_tile(event):
             for j in range(TilesAmount):
                 if event.keysym == 'Right' and (not RedTileInfo.RedTileIndexX == 4):
                     if board[i][j] == "red" and board[i][j + 1] == "red":
-                        if RedTileInfo.RedTileIndexY == tileInfo[i].TileIndexY:
-                            if not (RedTileInfo.RedTileIndexX == tileInfo[i].TileIndexX or RedTileInfo.RedTileIndexX + 2 == tileInfo[i].TileIndexX):
-                                buff = board[i][j]
-                                board[i][j] = board[i][j + 1]
-                                board[i][j + 1] = buff
-                                for i in range(boardSize):
-                                    for j in range(boardSize):
-                                        print(board[i][j], end=' ')
-                                    print()
+                        if board[i][j + 2] != "Tile":
+                            buff = board[i][j+2]
+                            board[i][j + 1] = board[i][j]
+                            board[i][j + 2] = board[i][j + 1]
+                            board[i][j] = buff
+                            for i in range(boardSize):
+                                for j in range(boardSize):
+                                    print(board[i][j], end=' ')
                                 print()
-                                canvas.move(redTileRect, squareSize, 0)
-                                RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX + 1
-                                if RedTileInfo.RedTileIndexX == 4:
-                                    RedTileInfo.winner()
-                            else:
-                                break
+                            print()
+                            canvas.move(redTileRect, squareSize, 0)
+                            RedTileInfo.RedTileIndexX = RedTileInfo.RedTileIndexX + 1
+                            if RedTileInfo.RedTileIndexX == 4:
+                                RedTileInfo.winner()
+                        else:
+                            break
                     # else:
                     #     localRight += 1
                     #     if localRight == TilesAmount:
